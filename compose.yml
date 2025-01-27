@@ -5,6 +5,16 @@ services:
       database:
         condition: service_healthy
 
+  exportfeed:
+    build: exportfeed
+    environment:
+      PORT: 8000
+    ports:
+      - "8000:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+
   database:
     image: mariadb:10.11
     ports:
