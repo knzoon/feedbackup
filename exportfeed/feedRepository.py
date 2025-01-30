@@ -21,7 +21,7 @@ def getConnection():
 def read_feed_from():
     with getConnection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time limit 5")
+            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 5")
             return cur.fetchall()
 
 

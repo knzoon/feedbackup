@@ -21,18 +21,18 @@ def getConnection():
 def getLatestReadInfo(conn):
     cur = conn.cursor()
     feedid = 1
-    cur.execute("select last_time, last_zone_id, last_highest_order from external_feed_read where id = ?", (feedid,))
+    cur.execute("select last_time, last_zone_id from external_feed_read where id = ?", (feedid,))
 
-    for (last_time, last_zone_id, last_highest_order) in cur:
+    for (last_time, last_zone_id) in cur:
         pass
-    return (last_time, last_zone_id, last_highest_order)
+    return (last_time, last_zone_id)
 
-def insertTakever(conn, newhighestorder, takeoverTime, feedItemAsString):
+def insertTakever(conn, zoneId, takeoverTime, feedItemAsString):
     cur = conn.cursor()
-    sql = "insert into improved_feed_item (id, order_number, takeover_time, original_takeover) values (?, ?, ?, ?)"
-    cur.execute(sql, (str(uuid.uuid4()), newhighestorder, takeoverTime, feedItemAsString))
+    sql = "insert into improved_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
+    cur.execute(sql, (zoneId, takeoverTime, feedItemAsString))
 
-def updateLatestReadInfo(conn, lastTime, lastZoneId, lastHighestOrder):
+def updateLatestReadInfo(conn, lastTime, lastZoneId):
     cur = conn.cursor()
-    sql = "update external_feed_read set last_time = ?, last_zone_id = ?, last_highest_order = ? where id = 1"
-    cur.execute(sql, (lastTime, lastZoneId, lastHighestOrder))
+    sql = "update external_feed_read set last_time = ?, last_zone_id = ? where id = 1"
+    cur.execute(sql, (lastTime, lastZoneId))

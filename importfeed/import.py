@@ -9,7 +9,7 @@ def read_feed():
     try:
         connection = feedRepository.getConnection()
         feeedReadInfo = feedRepository.getLatestReadInfo(connection)
-        lastTime, lastZoneId, lastHighestOrder = feeedReadInfo
+        lastTime, lastZoneId = feeedReadInfo
 
         feed = turfapi.fetchFeedFromDateOrderedLastFirst(lastTime)
         nrofFeedItems = len(feed)
@@ -17,12 +17,11 @@ def read_feed():
 
         if nrofFeedItems > 0:
             for feedItem in feed:
-                lastHighestOrder += 1
                 takeoverTime = datetime.strptime(feedItem["time"], "%Y-%m-%dT%H:%M:%S+0000")
                 zoneId = feedItem["zone"]["id"]
-                feedRepository.insertTakever(connection, lastHighestOrder, takeoverTime, json.dumps(feedItem, ensure_ascii=False))
+                feedRepository.insertTakever(connection, zoneId, takeoverTime, json.dumps(feedItem, ensure_ascii=False))
 
-            feedRepository.updateLatestReadInfo(connection, takeoverTime, zoneId, lastHighestOrder)
+            feedRepository.updateLatestReadInfo(connection, takeoverTime, zoneId)
         connection.commit()
     except Exception as e:
         print(f"Error while trying to read feed: {e}")
