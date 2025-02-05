@@ -1,5 +1,7 @@
+from datetime import datetime
 import mariadb
 import sys
+
 
 def getConnection():
     try:
@@ -18,28 +20,15 @@ def getConnection():
     return conn
 
 
-def read_feed_from():
+def read_feed_from_beginning():
     with getConnection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 5")
+            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 1000")
             return cur.fetchall()
 
 
-# def getLatestReadInfo(conn):
-#     cur = conn.cursor()
-#     feedid = 1
-#     cur.execute("select last_time, last_zone_id, last_highest_order from external_feed_read where id = ?", (feedid,))
-#
-#     for (last_time, last_zone_id, last_highest_order) in cur:
-#         pass
-#     return (last_time, last_zone_id, last_highest_order)
-#
-# def insertTakever(conn, newhighestorder, takeoverTime, feedItemAsString):
-#     cur = conn.cursor()
-#     sql = "insert into improved_feed_item (id, order_number, takeover_time, original_takeover) values (?, ?, ?, ?)"
-#     cur.execute(sql, (str(uuid.uuid4()), newhighestorder, takeoverTime, feedItemAsString))
-#
-# def updateLatestReadInfo(conn, lastTime, lastZoneId, lastHighestOrder):
-#     cur = conn.cursor()
-#     sql = "update external_feed_read set last_time = ?, last_zone_id = ?, last_highest_order = ? where id = 1"
-#     cur.execute(sql, (lastTime, lastZoneId, lastHighestOrder))
+def read_feed_after_specified_time(time: datetime):
+    with getConnection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("select takeover_time, original_takeover from improved_feed_item where takeover_time > ? order by takeover_time, zone_id limit 1000", (time,))
+            return cur.fetchall()
