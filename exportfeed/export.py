@@ -20,9 +20,9 @@ def get_index_of_last_unbroken_takeovertime(takeovers):
 
 
 @app.get("/feed")
-def read_feed_starting(start_time: datetime = None):
-    if start_time:
-        db_rows = feedRepository.read_feed_after_specified_time(start_time)
+def read_feed_starting(after: datetime = None):
+    if after:
+        db_rows = feedRepository.read_feed_after_specified_time(after)
     else:
         db_rows = feedRepository.read_feed_from_beginning()
 

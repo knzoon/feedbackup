@@ -5,7 +5,7 @@ from urllib.error import HTTPError
 
 def fetch_feed_from_date_ordered_last_first(last_datetime):
     datetime_string = last_datetime.strftime("%Y-%m-%dT%H:%M:%S+0000")
-    encoded_request_str = ('https://api.turfgame.com/unstable/feeds/takeover?afterDate='
+    encoded_request_str = ('https://api.turfgame.com/v5/feeds/takeover?afterDate='
                            + urllib.parse.quote(datetime_string))
     try:
         response = requests.get(encoded_request_str)

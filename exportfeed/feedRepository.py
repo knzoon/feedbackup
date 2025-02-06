@@ -24,12 +24,12 @@ def get_connection():
 def read_feed_from_beginning():
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 1000")
+            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 1001")
             return cur.fetchall()
 
 
 def read_feed_after_specified_time(time: datetime):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item where takeover_time > ? order by takeover_time, zone_id limit 1000", (time,))
+            cur.execute("select takeover_time, original_takeover from improved_feed_item where takeover_time > ? order by takeover_time, zone_id limit 1001", (time,))
             return cur.fetchall()
