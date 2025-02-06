@@ -2,7 +2,8 @@ import mariadb
 import sys
 import os
 
-def getConnection():
+
+def get_connection():
     try:
         conn = mariadb.connect(
             user="knzoonApp",
@@ -18,21 +19,24 @@ def getConnection():
     
     return conn
 
-def getLatestReadInfo(conn):
+
+def get_latest_read_info(conn):
     cur = conn.cursor()
-    feedid = 1
-    cur.execute("select last_time, last_zone_id from external_feed_read where id = ?", (feedid,))
+    feed_id = 1
+    cur.execute("select last_time, last_zone_id from external_feed_read where id = ?", (feed_id,))
 
     for (last_time, last_zone_id) in cur:
         pass
     return (last_time, last_zone_id)
 
-def insertTakever(conn, zoneId, takeoverTime, feedItemAsString):
+
+def insert_takeover(conn, zone_id, takeover_time, feed_item_as_string):
     cur = conn.cursor()
     sql = "insert into improved_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
-    cur.execute(sql, (zoneId, takeoverTime, feedItemAsString))
+    cur.execute(sql, (zone_id, takeover_time, feed_item_as_string))
 
-def updateLatestReadInfo(conn, lastTime, lastZoneId):
+
+def update_latest_read_info(conn, last_time, last_zone_id):
     cur = conn.cursor()
     sql = "update external_feed_read set last_time = ?, last_zone_id = ? where id = 1"
-    cur.execute(sql, (lastTime, lastZoneId))
+    cur.execute(sql, (last_time, last_zone_id))

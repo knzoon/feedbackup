@@ -2,11 +2,13 @@ import requests
 import urllib.parse
 from urllib.error import HTTPError
 
-def fetchFeedFromDateOrderedLastFirst(lastDatetime):
-    datetimeString = lastDatetime.strftime("%Y-%m-%dT%H:%M:%S+0000")
-    encodedRequestStr = 'https://api.turfgame.com/unstable/feeds/takeover?afterDate=' + urllib.parse.quote(datetimeString)
+
+def fetch_feed_from_date_ordered_last_first(last_datetime):
+    datetime_string = last_datetime.strftime("%Y-%m-%dT%H:%M:%S+0000")
+    encoded_request_str = ('https://api.turfgame.com/unstable/feeds/takeover?afterDate='
+                           + urllib.parse.quote(datetime_string))
     try:
-        response = requests.get(encodedRequestStr)
+        response = requests.get(encoded_request_str)
         response.raise_for_status()
     except HTTPError as http_err:
         print(f'HTTP error occurred: {http_err}')  # Python 3.6
@@ -15,10 +17,6 @@ def fetchFeedFromDateOrderedLastFirst(lastDatetime):
         print(f'Other error occurred: {err}')  # Python 3.6
         return []
     else:
-        feedFromApi = response.json()
-        sortedFeed = sorted(feedFromApi, key=lambda fi: fi["time"])
-        return sortedFeed
-    
-    
-
-    
+        feed_from_api = response.json()
+        sorted_feed = sorted(feed_from_api, key=lambda fi: fi["time"])
+        return sorted_feed
