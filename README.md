@@ -10,4 +10,13 @@ should get your takeovers safe in no time.
 ## Installation
 Just clone the repository and modify the values in the .env file
 
+### Configuration
+In the project root create a .env file with the following environment variables and your own values for passwords
+```
+DB_ROOT_PASSWD=yourSecretPasswordForDBRoot
+DB_USER_PASSWD=yourSecretPasswordForDBUser
+```
+The .env file is of course ignored by git
+
+### Running
 Then run `docker compose up`

@@ -1,12 +1,12 @@
 import mariadb
 import sys
-import uuid
+import os
 
 def getConnection():
     try:
         conn = mariadb.connect(
             user="knzoonApp",
-            password="appApa",
+            password=os.environ['DB_USER_PASSWORD'],
             host="database",
             port=3306,
             database="knzoon"

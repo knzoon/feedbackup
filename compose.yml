@@ -1,6 +1,8 @@
 services:
   importfeed:
     build: importfeed
+    environment:
+      DB_USER_PASSWORD: ${DB_USER_PASSWD}
     depends_on:
       database:
         condition: service_healthy
@@ -9,6 +11,7 @@ services:
     build: exportfeed
     environment:
       PORT: 8000
+      DB_USER_PASSWORD: ${DB_USER_PASSWD}
     ports:
       - "8000:8000"
     depends_on:
@@ -20,10 +23,10 @@ services:
     ports:
       - 3308:3306
     environment:
-      MYSQL_ROOT_PASSWORD: apa
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWD}
       MYSQL_DATABASE: knzoon
       MYSQL_USER: knzoonApp
-      MYSQL_PASSWORD: appApa
+      MYSQL_PASSWORD: ${DB_USER_PASSWD}
     volumes:
       - db-volume:/var/lib/mysql
       - ./init_db.sql:/docker-entrypoint-initdb.d/init.sql
