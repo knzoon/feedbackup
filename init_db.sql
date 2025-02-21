@@ -12,5 +12,5 @@ create table improved_feed_item (
                                     zone_id bigint(20) not null,
                                     takeover_time datetime(6) not null,
                                     original_takeover JSON not null,
-                                    primary key (zone_id, takeover_time)
+                                    primary key (takeover_time, zone_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_swedish_ci;
