@@ -21,15 +21,30 @@ def get_connection():
     return conn
 
 
-def read_feed_from_beginning():
+def read_takeover_feed_from_beginning():
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item order by takeover_time, zone_id limit 1001")
+            cur.execute("select takeover_time, original_takeover from improved_takeover_feed_item order by takeover_time, zone_id limit 1001")
             return cur.fetchall()
 
 
-def read_feed_after_specified_time(time: datetime):
+def read_takeover_feed_after_specified_time(time: datetime):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("select takeover_time, original_takeover from improved_feed_item where takeover_time > ? order by takeover_time, zone_id limit 1001", (time,))
+            cur.execute("select takeover_time, original_takeover from improved_takeover_feed_item where takeover_time > ? order by takeover_time, zone_id limit 1001", (time,))
             return cur.fetchall()
+
+
+def read_zone_feed_from_beginning():
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("select zone_created, original_zone from improved_zone_feed_item order by zone_created, zone_id limit 1001")
+            return cur.fetchall()
+
+
+def read_zone_feed_after_specified_time(time: datetime):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute("select zone_created, original_zone from improved_zone_feed_item where zone_created > ? order by zone_created, zone_id limit 1001", (time,))
+            return cur.fetchall()
+

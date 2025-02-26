@@ -32,8 +32,14 @@ def get_latest_read_info(conn):
 
 def insert_takeover(conn, zone_id, takeover_time, feed_item_as_string):
     cur = conn.cursor()
-    sql = "insert into improved_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
+    sql = "insert into improved_takeover_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
     cur.execute(sql, (zone_id, takeover_time, feed_item_as_string))
+
+
+def insert_zone(conn, zone_id, zone_created, feed_item_as_string):
+    cur = conn.cursor()
+    sql = "insert into improved_zone_feed_item (zone_id, zone_created, original_zone) values (?, ?, ?)"
+    cur.execute(sql, (zone_id, zone_created, feed_item_as_string))
 
 
 def update_latest_read_info(conn, last_time, last_zone_id):

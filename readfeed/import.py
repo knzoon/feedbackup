@@ -16,12 +16,19 @@ def read_feed():
         print(datetime.now(), "Number of feed items", nrof_feed_items, flush=True)
 
         if nrof_feed_items > 0:
+            zone_id = None
             for feed_item in feed:
-                takeover_time = datetime.strptime(feed_item["time"], "%Y-%m-%dT%H:%M:%S+0000")
-                zone_id = feed_item["zone"]["id"]
-                feedRepository.insert_takeover(connection, zone_id, takeover_time, json.dumps(feed_item, ensure_ascii=False))
+                feed_item_time = datetime.strptime(feed_item["time"], "%Y-%m-%dT%H:%M:%S+0000")
+                match feed_item["type"]:
+                    case "takeover":
+                        zone_id = feed_item["zone"]["id"]
+                        feedRepository.insert_takeover(connection, zone_id, feed_item_time, json.dumps(feed_item, ensure_ascii=False))
+                    case "zone":
+                        zone_id = feed_item["zone"]["id"]
+                        feedRepository.insert_zone(connection, zone_id, feed_item_time, json.dumps(feed_item, ensure_ascii=False))
 
-            feedRepository.update_latest_read_info(connection, takeover_time, zone_id)
+            if zone_id:
+                feedRepository.update_latest_read_info(connection, feed_item_time, zone_id)
         connection.commit()
     except Exception as e:
         print(f"Error while trying to read feed: {e}")
