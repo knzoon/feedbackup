@@ -1,7 +1,7 @@
 # feedbackup
 Backup the Turf-API takeovers
 
-Due to the fact that the TurfAPI only returns takeovers taken the last 15 minutes
+Due to the fact that the TurfAPI only returns takeovers taken the last 30 minutes
 it is important to have full redundancy of the takeovers to be sure you don't miss out on any takeovers.
 
 This is a fully plug and play dockerized solution that with a minimum of configuration
