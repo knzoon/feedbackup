@@ -6,6 +6,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    restart: unless-stopped
 
   exportfeed:
     build: exportfeed
@@ -17,6 +18,7 @@ services:
     depends_on:
       database:
         condition: service_healthy
+    restart: unless-stopped
 
   database:
     image: mariadb:10.11
@@ -36,6 +38,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+    restart: unless-stopped
 
 volumes:
   db-volume:
