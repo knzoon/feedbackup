@@ -30,10 +30,22 @@ def get_latest_read_info(conn):
     return (last_time, last_zone_id)
 
 
+def is_duplicate_takeover(conn, zone_id, takeover_time):
+    cur = conn.cursor()
+    cur.execute(" select 1 from improved_takeover_feed_item where zone_id = ? and takeover_time = ?", (zone_id, takeover_time))
+    return cur.rowcount > 0
+
+
 def insert_takeover(conn, zone_id, takeover_time, feed_item_as_string):
     cur = conn.cursor()
     sql = "insert into improved_takeover_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
     cur.execute(sql, (zone_id, takeover_time, feed_item_as_string))
+
+
+def is_duplicate_zone(conn, zone_id, zone_created):
+    cur = conn.cursor()
+    cur.execute(" select 1 from improved_zone_feed_item where zone_id = ? and zone_created = ?", (zone_id, zone_created))
+    return cur.rowcount > 0
 
 
 def insert_zone(conn, zone_id, zone_created, feed_item_as_string):
