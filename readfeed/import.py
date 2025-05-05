@@ -27,15 +27,11 @@ def read_feed(using_safe_mode):
                 match feed_item["type"]:
                     case "takeover":
                         zone_id = feed_item["zone"]["id"]
-                        if feedRepository.is_duplicate_takeover(connection, zone_id, feed_item_time):
-                            print(f"Found duplicate takeover {feed_item_time}-{zone_id}")
-                        else:
+                        if not feedRepository.is_duplicate_takeover(connection, zone_id, feed_item_time):
                             feedRepository.insert_takeover(connection, zone_id, feed_item_time, json.dumps(feed_item, ensure_ascii=False))
                     case "zone":
                         zone_id = feed_item["zone"]["id"]
-                        if feedRepository.is_duplicate_zone(connection, zone_id, feed_item_time):
-                            print(f"Found duplicate zone {feed_item_time}-{zone_id}")
-                        else:
+                        if not feedRepository.is_duplicate_zone(connection, zone_id, feed_item_time):
                             feedRepository.insert_zone(connection, zone_id, feed_item_time, json.dumps(feed_item, ensure_ascii=False))
 
             if zone_id:
@@ -58,7 +54,7 @@ def feedcreator():
     while True:
         read_feed(using_safe_mode)
         if using_safe_mode:
-            time.sleep(900)
+            time.sleep(240)
         else:
             time.sleep(60)
 
