@@ -12,9 +12,8 @@ def read_feed(using_safe_mode):
         feeed_read_info = feedRepository.get_latest_read_info(connection)
         last_time, last_zone_id = feeed_read_info
 
-        if using_safe_mode:
-            double_read_feed_items_time = timedelta(seconds=-30)
-            last_time = last_time + double_read_feed_items_time
+        double_read_feed_items_time = timedelta(seconds=-30)
+        last_time = last_time + double_read_feed_items_time
 
         feed = turfapi.fetch_feed_from_date_ordered_last_first(last_time)
         nrof_feed_items = len(feed)
