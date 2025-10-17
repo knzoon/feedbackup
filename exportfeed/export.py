@@ -35,6 +35,16 @@ def read_feed_starting(after: datetime = None):
     return result
 
 
+@app.get("/feed/takeover/latest")
+def read_feed_latest():
+    db_rows = feedRepository.read_takeover_feed_latest_item()
+
+    for (takeover_time, original_takeover) in db_rows:
+        latest_feed_item = original_takeover
+
+    return json.loads(latest_feed_item)
+
+
 @app.get("/feed/zone")
 def read_feed_starting(after: datetime = None):
     if after:
