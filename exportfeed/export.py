@@ -42,7 +42,16 @@ def read_feed_latest():
     for (takeover_time, original_takeover) in db_rows:
         latest_feed_item = original_takeover
 
-    return json.loads(latest_feed_item)
+    feed_item = json.loads(latest_feed_item)
+
+    zone_id = feed_item["zone"]["id"]
+    feed_item_time = datetime.strptime(feed_item["time"], "%Y-%m-%dT%H:%M:%S+0000")
+    # feed_item_time = feed_item["time"]
+    return_item = {
+        "zoneId": zone_id,
+        "takeoverTime": feed_item_time
+    }
+    return return_item
 
 
 @app.get("/feed/zone")
