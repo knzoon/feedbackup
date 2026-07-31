@@ -21,40 +21,40 @@ def get_connection():
 
 
 def get_latest_read_info(conn):
-    cur = conn.cursor()
-    feed_id = 1
-    cur.execute("select last_time, last_zone_id from external_feed_read where id = ?", (feed_id,))
+    with conn.cursor() as cur:
+        feed_id = 1
+        cur.execute("select last_time, last_zone_id from external_feed_read where id = ?", (feed_id,))
 
-    for (last_time, last_zone_id) in cur:
-        pass
-    return (last_time, last_zone_id)
+        for (last_time, last_zone_id) in cur:
+            pass
+        return (last_time, last_zone_id)
 
 
 def is_duplicate_takeover(conn, zone_id, takeover_time):
-    cur = conn.cursor()
-    cur.execute(" select 1 from improved_takeover_feed_item where zone_id = ? and takeover_time = ?", (zone_id, takeover_time))
-    return cur.rowcount > 0
+    with conn.cursor() as cur:
+        cur.execute(" select 1 from improved_takeover_feed_item where zone_id = ? and takeover_time = ?", (zone_id, takeover_time))
+        return cur.rowcount > 0
 
 
 def insert_takeover(conn, zone_id, takeover_time, feed_item_as_string):
-    cur = conn.cursor()
-    sql = "insert into improved_takeover_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
-    cur.execute(sql, (zone_id, takeover_time, feed_item_as_string))
+    with conn.cursor() as cur:
+        sql = "insert into improved_takeover_feed_item (zone_id, takeover_time, original_takeover) values (?, ?, ?)"
+        cur.execute(sql, (zone_id, takeover_time, feed_item_as_string))
 
 
 def is_duplicate_zone(conn, zone_id, zone_created):
-    cur = conn.cursor()
-    cur.execute(" select 1 from improved_zone_feed_item where zone_id = ? and zone_created = ?", (zone_id, zone_created))
-    return cur.rowcount > 0
+    with conn.cursor() as cur:
+        cur.execute(" select 1 from improved_zone_feed_item where zone_id = ? and zone_created = ?", (zone_id, zone_created))
+        return cur.rowcount > 0
 
 
 def insert_zone(conn, zone_id, zone_created, feed_item_as_string):
-    cur = conn.cursor()
-    sql = "insert into improved_zone_feed_item (zone_id, zone_created, original_zone) values (?, ?, ?)"
-    cur.execute(sql, (zone_id, zone_created, feed_item_as_string))
+    with conn.cursor() as cur:
+        sql = "insert into improved_zone_feed_item (zone_id, zone_created, original_zone) values (?, ?, ?)"
+        cur.execute(sql, (zone_id, zone_created, feed_item_as_string))
 
 
 def update_latest_read_info(conn, last_time, last_zone_id):
-    cur = conn.cursor()
-    sql = "update external_feed_read set last_time = ?, last_zone_id = ? where id = 1"
-    cur.execute(sql, (last_time, last_zone_id))
+    with conn.cursor() as cur:
+        sql = "update external_feed_read set last_time = ?, last_zone_id = ? where id = 1"
+        cur.execute(sql, (last_time, last_zone_id))
