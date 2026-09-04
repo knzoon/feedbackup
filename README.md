@@ -18,6 +18,11 @@ DB_USER_PASSWD=yourSecretPasswordForDBUser
 ```
 The .env file is of course ignored by git
 
+If you are using the server as an extra backup and only wants to keep the last 90 days of feed events you can add the following environment variable:
+```
+DO_PURGE_OLD_ITEMS=true
+```
+
 ### Running
 Then run `docker compose up`
 
@@ -33,25 +38,36 @@ The original_takeover is the json for this takeover in original format
 This service polls the Turf API once a minute
 
 ## exportfeed
-To be able to read from this backup and make any use of it there are one endpoint `/feed` who take an optional queryparam `after`
+To be able to read from this backup and make any use of it there are three endpoints
 
-If no queryparam is provided it starts with the oldest takerover
+### Takeover feed
+`/feed/takeover` who take an optional queryparam `after`
+
+If no queryparam is provided it starts with the oldest takeover
 
 The queryparam `after` represents a datetime and specifies to return takeovers after that specified time.
 The datetime should be formatted according to ISO 8601
 
 An example
 ```
-http://localhost:8000/feed?after=2025-02-06T13:39:31
+http://localhost:8000/feed/takeover?after=2025-02-06T13:39:31
 ```
 
 The response is a json list following the same format as the official Turf API but with **one big difference**.
-The takeovers are ordered in natural order according to takeovertime. 
+The takeovers are ordered in natural order according to takeovertime.
 So it begins with the takeover that is closest to the time you specified and continues with takeovers taken later.
 
 It returns 1000 takeovers at most, but two make sure all takeovers for a particular second is returned in one go it can be fewer.
 
-### Usage
+### Zone feed
+`/feed/zone` who take an optional queryparam `after`
+Works the same way as the takeover endpoint
+
+### Latest takeover
+`/feed/takeover/latest` 
+This endpoint returns the latest read takeover and can be used to determine health of the server.
+
+### Basic usage of the two feed endpoints
 This endpoint serves two basic use cases:
 - Regular polling
 - Catch up missing takeovers
@@ -67,9 +83,5 @@ This endpoint serves two basic use cases:
 #### Algorithm for Catch up missing takeovers
 More or less equal to the algorithm above but just adjust the waiting time until the endpoints starts returning
 a small amount of takeovers which tells you that you are back on track 
-
-
-## importfeed - Not implemented yet
-More of an admin endpoint that serves the purpose to populate the database with older takeovers taken from an external source 
 
 

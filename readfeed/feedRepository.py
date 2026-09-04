@@ -58,3 +58,11 @@ def update_latest_read_info(conn, last_time, last_zone_id):
     with conn.cursor() as cur:
         sql = "update external_feed_read set last_time = ?, last_zone_id = ? where id = 1"
         cur.execute(sql, (last_time, last_zone_id))
+
+
+def purge_old_feed_items(purge_time):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            sql = "delete from improved_takeover_feed_item where takeover_time < ?"
+            cur.execute(sql, (purge_time,))
+            conn.commit()

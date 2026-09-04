@@ -4,6 +4,7 @@ import time
 import feedRepository
 import turfapi
 import os
+import schedule
 
 
 def read_feed(using_safe_mode):
@@ -43,6 +44,13 @@ def read_feed(using_safe_mode):
         connection.close()
 
 
+def purge_old_feed_items():
+    three_month_back = timedelta(days=-90)
+    purge_older_than_time = datetime.now() + three_month_back
+    print(datetime.now(), "Purging old feed items older than: ", purge_older_than_time, flush=True)
+    feedRepository.purge_old_feed_items(purge_older_than_time)
+
+
 def feedcreator():
     print(datetime.now(), "Starting feed reader", flush=True)
     using_safe_mode = True
@@ -50,8 +58,14 @@ def feedcreator():
     if using_safe_mode_from_env == "false":
         using_safe_mode = False
 
+    do_purge_old_items_from_env = os.environ['DO_PURGE_OLD_ITEMS']
+    if do_purge_old_items_from_env == 'true':
+        schedule.every().day.at("03:20").do(purge_old_feed_items)
+
     while True:
         read_feed(using_safe_mode)
+        schedule.run_pending()
+
         if using_safe_mode:
             time.sleep(240)
         else:
